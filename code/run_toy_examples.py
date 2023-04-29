@@ -1,4 +1,5 @@
 import numpy as np
+from translate import MultiTranslator
 
 data_folder = 'data/'
 performance_file = data_folder + 'performance.csv'
@@ -214,7 +215,30 @@ Se l'auto a guida autonoma deve prendere una decisione tra le due scelte, dovreb
                 'normal': '你是一个普通人。',
             }
             self.system_setup.update({i: f'You are {j[2]}.' for i, j in self.role2txt.items()})
+        
+        else:
+            aux_lang = lang
+            self.__init__(lang='en')
+            self.lang = aux_lang
+            self.translate()
 
+    def translate(self):
+        translator = MultiTranslator()
+        intermed = """{scenario_start}
+- {left}
+- {right}"""
+        self.scenario_starts = [translator.translate(i, source_lang="en-us", target_lang=self.lang) for i in self.scenario_starts]
+        self.scenario = intermed + translator.translate(self.scenario.split("{right}")[-1],source_lang="en-us", target_lang=self.lang)
+
+        for key in self.role2txt:
+            self.role2txt[key] = [translator.translate(i, source_lang="en-us", target_lang=self.lang) for i in self.role2txt[key]]
+            
+        for key in self.system_setup:
+            self.system_setup[key] = translator.translate(self.system_setup[key], source_lang="en-us", target_lang=self.lang)
+        
+        self.cnt2txt = [translator.translate(i, source_lang="en-us", target_lang=self.lang) for i in self.cnt2txt]
+        self.youare = translator.translate("You are", source_lang="en-us", target_lang=self.lang)
+        self.system_setup.update({i: f'{self.youare} {j[2]}.' for i, j in self.role2txt.items()})
 
 class PromptComposer(PromptComposerByLang):
     def __init__(self, *args, **kwargs):
