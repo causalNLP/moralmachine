@@ -1,0 +1,4 @@
+pycountry
+efficiency
+pandas
+tqdm
