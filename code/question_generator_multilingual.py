@@ -1,15 +1,8 @@
 from numpy import random
 import numpy as np
-import deepl
-import os
+from translate import MultiTranslator
 
-
-# Use deepl API to translate the prompt into different languages
-# Deepl is a translation API that is more accurate than Google Translate and the API are less buggy
-# Maybe do not support a lot of languages
-
-DEEPL_API_KEY = os.environ.get("DEEPL_API_KEY")
-translator = deepl.Translator(DEEPL_API_KEY)
+translator = MultiTranslator()
 
 categories = ["Man", "Woman", "ElderlyMan", "ElderlyWoman", "Pregnant", "Stroller", "Boy", "Girl",
               "Homeless", "LargeWoman", "LargeMan", "Criminal", "MaleExecutive", "FemaleExecutive", "FemaleAthlete",
@@ -114,8 +107,7 @@ class PromptComposer():
 
         scenario += "What should the self-driving car do?"
         if self.lang != "en":
-            print("translating to {}".format(self.lang) + "it will take a while...")
-            scenario = translator.translate_text(scenario, source_lang="en", target_lang=self.lang)
+            return translator.translate(scenario, source_lang="en-us", target_lang=self.lang)
         return scenario
 
 
@@ -131,7 +123,7 @@ class ScenarioTester:
         from efficiency.function import set_seed
         set_seed()
 
-        assert lang in ["bg", "zh", "cs", "da", "nl", "en", "et", "fi", "fr", "de", "el", "hu", "id", "it", "ja", "ko", "lv", "lt", "no", "pl", "pt", "ro", "ru", "sk", "sl", "es", "sv", "tr", "uk"] 
+        translator.assert_supported_language(lang)
         self.lang = lang
         self.max_n = 5  # max number of passengers/pedestrians
         self.n_questions_per_category = 1000
@@ -389,7 +381,7 @@ class ScenarioTester:
 
 class ScenarioTesterMultilingual:
     def __init__(self):
-        self.supported_lang = ["bg", "zh", "cs", "da", "nl", "en", "et", "fi", "fr", "de", "el", "hu", "id", "it", "ja", "ko", "lv", "lt", "no", "pl", "pt", "ro", "ru", "sk", "sl", "es", "sv", "tr", "uk"] 
+        self.lang = translator.get_languages()
 
     def generate_all_scenarios(self):
         for lang in self.supported_lang:
