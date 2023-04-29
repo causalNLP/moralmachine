@@ -24,8 +24,8 @@ Our codes consist of the following elements:
 
 ### Current Working Items
 
-1. ZJ: working on (1) clustering the reasons given by the toy examples, and (2) check preferences over different roles.
-2. FO: working on `run_toy_examples_multilingual.py ` and `multilingual_question_generator.py` .
+1. ZJ: working on various analyses for the paper
+2. FO: working on Google Translate
 3. AS: adding `get_fig2b()` to `question_generator.py`
 4. FG: preparing to run hierarchical clustering in Fig3a and 3b once our output is ready.
 
