@@ -38,7 +38,7 @@ class MultiTranslator:
         self.deeplTranslator = deepl.Translator(DEEPL_API_KEY)
         self.google_translate = translate.Client()
         self.deepl_lang = ["it", "es", "fr", "de", "pt", "pl", "nl", "sv", "no", "fi", "da", "el", "cs", "hu", "bg", "ro", "en-us"]
-        self.google_lang = ["ar", "zh", "ja", "ko", "hi", "ur", "bn", "ru", "tr", "sw", "id", "ms", "vi", "th", "he", "fa", "am", "uk"]
+        self.google_lang = ['ja', 'mk', 'bn', 'sk', 'ms', 'vi', 'sl', 'ar', 'ur', 'is', 'et', 'am', 'hr', 'bs', 'af', 'ka', 'ko', 'tr', 'id', 'sr', 'lv', 'hi', 'sw', 'th', 'fa', 'ru', 'uk', 'mt', 'lt', 'he', 'zh']
         
     def get_languages(self):
         return self.deepl_lang + self.google_lang
@@ -59,10 +59,11 @@ class MultiTranslator:
             else:
                 raise ValueError(f"Target language {target_lang} not supported. Add it to MultiTranslator class")
         
-        if target_lang in ["en-us", "en-uk"]:
+        if target_lang in ["en-us", "en-uk", "en"]:
             if source_lang in self.deepl_lang:
                 return self.translate_text_deepl(text, source_lang, target_lang)
             if source_lang in self.google_lang:
+                target_lang = "en"
                 return self.translate_text_googleTranslate(text, source_lang, target_lang)
             else:
                 raise ValueError(f"Source language {source_lang} not supported. Add it to MultiTranslator class")
