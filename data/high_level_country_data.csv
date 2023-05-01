@@ -1,0 +1,109 @@
+ISO,ISO3,Continent,Languages,Culture,Languages Spoken,official_languages,Country,Cluster
+AE,ARE,AS,ar,Islamic,"Arabic (official), Persian, English, Hindi, Urdu",['ar'],United Arab Emirates,1
+AL,ALB,EU,sq,Orthodox,"Albanian (Tosk is the official dialect), Greek",['sq'],Albania,0
+AM,ARM,AS,hy,Orthodox,"Armenian 98%, Yezidi, Russian","['hy', 'ru']",Armenia,1
+AR,ARG,SA,es,LatinAmerica,"Spanish (official), English, Italian, German, French","['es', 'gn']",Argentina,2
+AT,AUT,EU,de,Catholic,"German (official nationwide); Slovene, Croatian, Hungarian (each official in one region)",['de'],Austria,0
+AU,AUS,OC,en,English,"English 79%, native and other languages",['en'],Australia,0
+AZ,AZE,AS,az,Islamic,"Azerbaijani Turkic 89%, Russian 3%, Armenian 2%, other 6% (1995 est.)","['az', 'hy']",Azerbaijan,2
+BA,BIH,EU,bs,Orthodox,"Bosnian, Croatian, Serbian","['bs', 'hr', 'sr']",Bosnia and Herzegovina,0
+BD,BGD,AS,bn,Islamic,"Bangla (official), English",['bn'],Bangladesh,0
+BE,BEL,EU,nl,Catholic,"Dutch (Flemish) 60%, French 40%, German less than 1% (all official)","['nl', 'fr', 'de']",Belgium,0
+BG,BGR,EU,bg,Orthodox,"Bulgarian 85%, Turkish 10%, Roma 4%",['bg'],Bulgaria,0
+BO,BOL,SA,es,LatinAmerica,"Spanish, Quechua, Aymara (all official)","['es', 'ay', 'qu']",Bolivia,2
+BR,BRA,SA,pt,LatinAmerica,"Portuguese (official), Spanish, English, French",['pt'],Brazil,0
+BY,BLR,EU,be,Orthodox,"Belorussian (White Russian), Russian, other","['be', 'ru']",Belarus,0
+CA,CAN,North America,en,English,"English 59.3%, French 23.2% (both official); other 17.5%","['en', 'fr']",Canada,0
+CH,CHE,EU,de,Protestant,"German 64%, French 20%, Italian 7% (all official); Romansch 0.5% (national)","['de', 'fr', 'it']",Switzerland,0
+CL,CHL,SA,es,LatinAmerica,Spanish,['es'],Chile,2
+CN,CHN,AS,zh,Confucian,"Standard Chinese (Mandarin/Putonghua), Yue (Cantonese), Wu (Shanghaiese), Minbei (Fuzhou), Minnan (Hokkien-Taiwanese), Xiang, Gan, Hakka dialects, minority languages",['zh'],China,1
+CO,COL,SA,es,LatinAmerica,Spanish,['es'],Colombia,2
+CR,CRI,North America,es,LatinAmerica,"Spanish (official), English",['es'],Costa Rica,2
+CY,CYP,EU,el,Orthodox,"Greek, Turkish (both official); English","['el', 'tr', 'hy']",Cyprus,0
+CZ,CZE,EU,cs,Catholic,Czech,"['cs', 'sk']",Czechia,2
+DE,DEU,EU,de,Protestant,German,['de'],Germany,0
+DK,DNK,EU,da,Protestant,"Danish, Faroese, Greenlandic (Inuit dialect), German; English is the predominant second language",['da'],Denmark,0
+DO,DOM,North America,es,LatinAmerica,Spanish,['es'],Dominican Republic,2
+DZ,DZA,AF,ar,Islamic,"Arabic (official), French, Berber dialects",['ar'],Algeria,2
+EC,ECU,SA,es,LatinAmerica,"Spanish (official), Quechua, other Amerindian languages",['es'],Ecuador,2
+EE,EST,EU,et,Baltic,"Estonian 67% (official), Russian 30%, other (2000)",['et'],Estonia,0
+EG,EGY,AF,ar,Islamic,"Arabic (official), English and French widely understood by educated classes",['ar'],Egypt,1
+ES,ESP,EU,es,Catholic,"Castilian Spanish 74% (official nationwide); Catalan 17%, Galician 7%, Basque 2% (each official regionally)",['es'],Spain,0
+FI,FIN,EU,fi,Protestant,"Finnish 92%, Swedish 6% (both official); small Sami- (Lapp) and Russian-speaking minorities","['fi', 'sv']",Finland,0
+FR,FRA,EU,fr,Catholic,"French 100%, rapidly declining regional dialects (Provençal, Breton, Alsatian, Corsican, Catalan, Basque, Flemish)",['fr'],France,2
+GB,GBR,EU,en,English,"English, Welsh, Scots Gaelic",['en'],United Kingdom,0
+GE,GEO,AS,ka,Orthodox,"Georgian 71% (official), Russian 9%, Armenian 7%, Azerbaijani 6%, other 7% (Abkhaz is the official language in Abkhazia)",['ka'],Georgia,0
+GR,GRC,EU,el,Orthodox,"Greek 99% (official), English, French",['el'],Greece,0
+GT,GTM,North America,es,LatinAmerica,"Spanish 60%, Amerindian languages 40% (23 officially recognized Amerindian languages, including Quiche, Cakchiquel, Kekchi, Mam, Garifuna, and Xinca)",['es'],Guatemala,2
+HK,HKG,AS,zh,Confucian,,"['en', 'zh']",Hong Kong,1
+HN,HND,North America,es,LatinAmerica,"Spanish (official), Amerindian dialects; English widely spoken in business",['es'],Honduras,2
+HR,HRV,EU,hr,Catholic,"Croatian 96% (official), other 4% (including Italian, Hungarian, Czech, Slovak, German)",['hr'],Croatia,0
+HU,HUN,EU,hu,Catholic,"Magyar (Hungarian) 94%, other 6%",['hu'],Hungary,2
+ID,IDN,AS,id,Islamic,"Bahasa Indonesia (official), English, Dutch, Javanese, and more than 580 other languages and dialects",['id'],Indonesia,1
+IE,IRL,EU,en,English,"English, Irish (Gaelic) (both official)","['ga', 'en']",Ireland,0
+IL,ISR,AS,he,,"Hebrew (official), Arabic, English","['he', 'ar']",Israel,0
+IN,IND,AS,en,SouthAsia,"Hindi 30%, English, Bengali, Gujarati, Kashmiri, Malayalam, Marathi, Oriya, Punjabi, Tamil, Telugu, Urdu, Kannada, Assamese, Sanskrit, Sindhi (all official); Hindi/Urdu; 1,600+ dialects","['hi', 'en']",India,1
+IQ,IRQ,AS,ar,Islamic,"Arabic (official), Kurdish (official in Kurdish regions), Assyrian, Armenian","['ar', 'ku']",Iraq,0
+IR,IRN,AS,fa,Islamic,"Persian and Persian dialects 58%, Turkic and Turkic dialects 26%, Kurdish 9%, Luri 2%, Balochi 1%, Arabic 1%, Turkish 1%, other 2%",['fa'],Iran,1
+IS,ISL,EU,is,Protestant,"Icelandic, English, Nordic languages, German widely spoken",['is'],Iceland,0
+IT,ITA,EU,it,Catholic,"Italian (official); German-, French-, and Slovene-speaking minorities",['it'],Italy,0
+JM,JAM,North America,en,LatinAmerica,"English, Jamaican Creole",['en'],Jamaica,0
+JO,JOR,AS,ar,Islamic,"Arabic (official), English",['ar'],Jordan,1
+JP,JPN,AS,ja,Confucian,Japanese,['ja'],Japan,1
+KE,KEN,AF,en,Islamic,"English (official), Swahili (national), and numerous indigenous languages","['en', 'sw']",Kenya,0
+KH,KHM,AS,km,SouthAsia,"Khmer 95% (official), French, English",['km'],Cambodia,1
+KR,KOR,AS,ko,Confucian,,['ko'],South Korea,1
+KW,KWT,AS,ar,Islamic,"Arabic (official), English",['ar'],Kuwait,1
+KZ,KAZ,AS,kk,Islamic,"Kazak (Qazaq, state language) 64%; Russian (official, used in everyday business) 95% (2001 est.)","['kk', 'ru']",Kazakhstan,0
+LB,LBN,AS,ar,Islamic,"Arabic (official), French, English, Armenian","['ar', 'fr']",Lebanon,1
+LK,LKA,AS,si,SouthAsia,"Sinhala 74% (official and national), Tamil 18% (national), other 8%; English is commonly used in government and spoken competently by about 10%","['si', 'ta']",Sri Lanka,0
+LT,LTU,EU,lt,Baltic,"Lithuanian 82% (official), Russian 8%, Polish 6% (2001)",['lt'],Lithuania,0
+LU,LUX,EU,lb,Catholic,"Luxermbourgish (national) French, German (both administrative)","['fr', 'de', 'lb']",Luxembourg,0
+LV,LVA,EU,lv,Baltic,"Latvian 58% (official), Russian 38%, Lithuanian, other (2000)",['lv'],Latvia,0
+MA,MAR,AF,ar,Islamic,"Arabic (official), Berber dialects, French often used for business, government, and diplomacy",['ar'],Morocco,2
+MD,MDA,EU,ro,Orthodox,"Moldovan (official; virtually the same as Romanian), Russian, Gagauz (a Turkish dialect)",['ro'],Moldova,0
+ME,MNE,EU,sr,Orthodox,Serbian/Montenegrin (Ijekavian dialect—official),['cnr'],Montenegro,0
+MK,MKD,EU,mk,Orthodox,"Macedonian 67%, Albanian 25% (both official); Turkish 4%, Roma 2%, Serbian 1% (2002)",['mk'],Macedonia,1
+MN,MNG,AS,mn,Confucian,"Mongolian, 90%; also Turkic and Russian (1999)",['mn'],Mongolia,2
+MO,MAC,AS,zh,Confucian,,"['zh', 'pt']",Macao,1
+MT,MLT,EU,mt,Catholic,Maltese and English (both official),"['mt', 'en']",Malta,2
+MU,MUS,AF,en,SouthAsia,"English less than 1% (official), Creole 81%, Bojpoori 12%, French 3% (2000)",['en'],Mauritius,1
+MX,MEX,North America,es,LatinAmerica,"Spanish, various Mayan, Nahuatl, and other regional indigenous languages",['es'],Mexico,2
+MY,MYS,AS,ms,Islamic,"Bahasa Melayu (Malay, official), English, Chinese dialects (Cantonese, Mandarin, Hokkien, Hakka, Hainan, Foochow), Tamil, Telugu, Malayalam, Panjabi, Thai; several indigenous languages (including Iban, Kadazan) in East Malaysia",[],Malaysia,1
+NC,NCL,OC,fr,Catholic,,['fr'],New Caledonia,2
+NL,NLD,EU,nl,Protestant,"Dutch, Frisian (both official)",['nl'],Netherlands,0
+NO,NOR,EU,no,Protestant,"Bokmål Norwegian, Nynorsk Norwegian (both official); small Sami- and Finnish-speaking minorities (Sami is official in six municipalities)","['no', 'nb', 'nn']",Norway,0
+NP,NPL,AS,ne,SouthAsia,"Nepali 48% (official), Maithali 12%, Bhojpuri 7%, Tharu 6%, Tamang 5%, others. English spoken by many in government and business (2001)",['ne'],Nepal,1
+NZ,NZL,OC,en,English,"English, Maori (both official)","['en', 'mi']",New Zealand,0
+PA,PAN,North America,es,LatinAmerica,"Spanish (official), English 14%, many bilingual",['es'],Panama,2
+PE,PER,SA,es,LatinAmerica,"Spanish, Quéchua (both official); Aymara; many minor Amazonian languages",['es'],Peru,2
+PH,PHL,AS,tl,LatinAmerica,"Filipino (based on Tagalog), English (both official); eight major dialects: Tagalog, Cebuano, Ilocano, Hiligaynon or Ilonggo, Bicol, Waray, Pampango, and Pangasinense",['en'],Philippines,2
+PK,PAK,AS,ur,Islamic,"Urdu 8%, English (both official); Punjabi 48%, Sindhi 12%, Siraiki (a Punjabi variant) 10%, Pashtu 8%, Balochi 3%, Hindko 2%, Brahui 1%, Burushaski, and others 8%","['en', 'ur']",Pakistan,1
+PL,POL,EU,pl,Catholic,Polish 98% (2002),['pl'],Poland,0
+PR,PRI,North America,en,LatinAmerica,,"['es', 'en']",Puerto Rico,2
+PS,PSE,AS,ar,Islamic,,['ar'],Palestinian Territory,1
+PT,PRT,EU,pt,Catholic,"Portuguese (official), Mirandese (official, but locally used)",['pt'],Portugal,0
+PY,PRY,SA,es,LatinAmerica,"Spanish, Guaraní (both official)","['es', 'gn']",Paraguay,2
+QA,QAT,AS,ar,Islamic,Arabic (official); English a common second language,['ar'],Qatar,0
+RE,REU,AF,fr,Catholic,,['fr'],Reunion,2
+RO,ROU,EU,ro,Orthodox,"Romanian (official), Hungarian, German",['ro'],Romania,0
+RS,SRB,EU,sr,Orthodox,"Albanian (official), Serbian (official), Bosnian, Turkish, Roma",['srp'],Serbia,0
+RS,SRB,EU,sr,Orthodox,"Serbian (official); Romanian, Hungarian, Slovak, and Croatian (all official in Vojvodina); Albanian (official in Kosovo)",['srp'],Serbia,0
+RU,RUS,EU,ru,Orthodox,"Russian, others",['ru'],Russia,0
+SA,SAU,AS,ar,Islamic,Arabic,['ar'],Saudi Arabia,1
+SE,SWE,EU,sv,Protestant,"Swedish, small Sami- and Finnish-speaking minorities",['sv'],Sweden,0
+SG,SGP,AS,cmn,SouthAsia,"Mandarin 35%, English 23%, Malay 14.1%, Hokkien 11.4%, Cantonese 5.7%, Teochew 4.9%, Tamil 3.2%, other Chinese dialects 1.8%, other 0.9% (2000)","['en', 'ms', 'ta', 'zh']",Singapore,0
+SI,SVN,EU,sl,Catholic,"Slovenian 91%, Serbo-Croatian 5% (2002)",['sl'],Slovenia,0
+SK,SVK,EU,sk,Catholic,"Slovak 84% (official), Hungarian 11%, Roma 2%, Ukrainian 1% (2001)",['sk'],Slovakia,2
+SV,SLV,North America,es,LatinAmerica,"Spanish, Nahua (among some Amerindians)",['es'],El Salvador,2
+TH,THA,AS,th,SouthAsia,"Thai (Siamese), English (secondary language of the elite), ethnic and regional dialects",['th'],Thailand,1
+TN,TUN,AF,ar,Islamic,"Arabic (official, commerce), French (commerce)",['ar'],Tunisia,0
+TR,TUR,AS,tr,Islamic,"Turkish (official), Kurdish, Dimli, Azeri, Kabardian",['tr'],Turkey,2
+TT,TTO,North America,en,LatinAmerica,"English (official), Hindi, French, Spanish, Chinese",['en'],Trinidad and Tobago,0
+TW,TWN,AS,zh,Confucian,"Chinese (Mandarin, official), Taiwanese (Min), Hakka dialects",['zh'],Taiwan,1
+UA,UKR,EU,uk,Orthodox,"Ukrainian 67%, Russian 24%, Romanian, Polish, Hungarian",['uk'],Ukraine,0
+US,USA,North America,en,English,"English 82%, Spanish 11% (2000)",['en'],United States,0
+UY,URY,SA,es,LatinAmerica,"Spanish, Portunol, or Brazilero",['es'],Uruguay,2
+VE,VEN,SA,es,LatinAmerica,"Spanish (official), numerous indigenous dialects",['es'],Venezuela,2
+VN,VNM,AS,vi,SouthAsia,"Vietnamese (official); English (increasingly favored as a second language); some French, Chinese, Khmer; mountain area languages (Mon-Khmer and Malayo-Polynesian)",['vi'],Vietnam,0
+ZA,ZAF,AF,zu,Islamic,"IsiZulu 23.8%, IsiXhosa 17.6%, Afrikaans 13.3%, Sepedi 9.4%, English 8.2%, Setswana 8.2%, Sesotho 7.9%, Xitsonga 4.4%, other 7.2%","['af', 'en', 'nr', 'st', 'ss', 'tn', 'ts', 've', 'xh', 'zu']",South Africa,0
