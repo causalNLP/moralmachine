@@ -5,47 +5,16 @@ categories = ["Man", "Woman", "ElderlyMan", "ElderlyWoman", "Pregnant", "Strolle
               "Homeless", "LargeWoman", "LargeMan", "Criminal", "MaleExecutive", "FemaleExecutive", "FemaleAthlete",
               "MaleAthlete", "FemaleDoctor", "MaleDoctor", "Dog", "Cat"]
 
+data_folder = 'data/'
+performance_file = data_folder + 'performance.csv'
+gpt_output_file_tmpl = data_folder + 'cache/{model_version}_{system_role}_{lang}_response.csv'
+vign_output_file_tmpl = data_folder + 'mm_{model_version}_{system_role}_{lang}{suffix}.csv'
+human_file = data_folder + 'human_pref_by_country.csv'
 
-class PromptComposer:
-    role2en = {
-        "Person": ["person", "people", ],
-        "Woman": ["woman", "women", ],
-        "Man": ["man", "men", ],
-        "Stroller": ["stroller", "strollers", ],
-        "Girl": ["girl", "girls", ],
-        "Boy": ["boy", "boys", ],
-        "Pregnant": ["pregnant woman", "pregnant women", ],
-        "ElderlyWoman": ["elderly woman", "elderly women", ],
-        "ElderlyMan": ["elderly man", "elderly men", ],
-
-        "LargeWoman": ["large woman", "large women", ],
-        "LargeMan": ["large man", "large men", ],
-        "FemaleAthlete": ["female athlete", "female athletes", ],
-        "MaleAthlete": ["male athlete", "male athletes", ],
-
-        "Executive": ["executive", "executives", ],
-        "FemaleExecutive": ["female executive", "female executives", ],
-        "MaleExecutive": ["male executive", "male executives", ],
-        "FemaleDoctor": ["female doctor", "female doctors", ],
-        "MaleDoctor": ["male doctor", "male doctors", ],
-        "Homeless": ["homeless person", "homeless people", ],
-        "Criminal": ["criminal", "criminals", ],
-
-        "Dog": ["dog", "dogs", ],
-        "Cat": ["cat", "cats", ],
-        "Animal": ["animal", "animals", ],
-    }
-
-    def _verbalize_cnt_and_role(self, cnt, role):
-        role_en = self.role2en[role][int(cnt != 1)]
-        expression = ' '.join([str(cnt), role_en])
-        return expression
-
-    def _verbalize_a_list(self, ls):
-        if len(ls) > 1:
-            ls[-1] = 'and ' + ls[-1]
-        expr = ', '.join(ls) + ' '
-        return expr
+from run_toy_examples import PromptComposer
+class PromptComposerExactMoralMachine(PromptComposer):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
 
     def generate_prompt(self, passengers: list,
                         pedestrians: list,
@@ -104,15 +73,12 @@ class PromptComposer:
         return scenario
 
 
-def get_gpt4_response(query):
-    import numpy as np
-    return np.random.randint(0, 2)
+from run_toy_examples import GPTResponseParser, ScenarioTester
 
+class ScenarioTesterExactMoralMachine(ScenarioTester):
 
-class ScenarioTester:
-    file_path_templ = 'data/vignette_{}.csv'
-
-    def __init__(self):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
         from efficiency.function import set_seed
         set_seed()
 
@@ -208,15 +174,18 @@ class ScenarioTester:
         gen_prompts_df("Random", "Rand", "Rand", n_qs_per_category, categories, categories,
                        equal_number=False, preserve_order=False)
 
-    def gen_prompts_df(self, category, sub1, sub2, nQuestions, cat1, cat2, equal_number=False,
-                       preserve_order=False):
+    def gen_prompts_df(self, category, sub1, sub2, nQuestions, cat1, cat2,
+                       equal_number=False, preserve_order=False):
         max_n = self.max_n
         df_items = self.df_items
-        generate_prompt = PromptComposer().generate_prompt
+        generate_prompt = self.generate_prompt
+        get_gpt4_response = self.get_gpt4_response
+        from numpy import random
 
         import numpy as np
-        queries = []
-        while len(queries) < nQuestions:
+        from tqdm import tqdm
+
+        for _ in tqdm(list(range(nQuestions)), desc=self.file_path):
 
             if category == "Random":
                 n_group1 = random.randint(1, max_n + 1)
@@ -338,22 +307,22 @@ class ScenarioTester:
 
         # rel to vehicle
         carVSped = df[df['PedPed'] == False]
-        X_rel_to_vehicle = carVSped['GroupNMBR']  # 0 means car
+        X_rel_to_vehicle = carVSped['saved_prob_is_for_which']  # 0 means car
         Y_rel_to_vehicle = carVSped['Saved']
         coef_rel_to_vehicle = model.fit(X_rel_to_vehicle.to_numpy().reshape(-1, 1), Y_rel_to_vehicle)
         print(coef_rel_to_vehicle.coef_)
 
         # rel to legality
         pedVsped = df[(df['PedPed'] == True) & (df['Legality'] != 0)]
-        X_rel_to_legality = ((1 - pedVsped['Legality']) == pedVsped['GroupNMBR']).astype(int)
+        X_rel_to_legality = ((1 - pedVsped['Legality']) == pedVsped['saved_prob_is_for_which']).astype(int)
         Y_rel_to_legality = pedVsped['Saved']
         coef_rel_to_legality = model.fit(X_rel_to_legality.to_numpy().reshape(-1, 1), Y_rel_to_legality)
         print(coef_rel_to_legality.coef_)
 
         for scenario in df['Scenario'].unique():
             tmp = df[df['Scenario'] == scenario]
-            options = tmp['Attribute_level'].unique()
-            X_scenario = tmp['Attribute_level'].map(lambda x: np.where(options == x)[0][0])
+            options = tmp['saved_prob_is_for_which_str'].unique()
+            X_scenario = tmp['saved_prob_is_for_which_str'].map(lambda x: np.where(options == x)[0][0])
             X_scenario = X_scenario.to_numpy().reshape(-1, 1)
             Y_scenario = tmp['Saved']
             coef_scenario = model.fit(X_scenario, Y_scenario)
@@ -363,8 +332,8 @@ class ScenarioTester:
             tmp = df[df['Scenario'] == 'Utilitarianism']
             tmp = tmp[
                 (tmp['DiffInCharacters'] == diff_in_characters) | (tmp['DiffInCharacters'] == -diff_in_characters)]
-            options = tmp['Attribute_level'].unique()
-            X_scenario = tmp['Attribute_level'].map(lambda x: np.where(options == x)[0][0])
+            options = tmp['saved_prob_is_for_which_str'].unique()
+            X_scenario = tmp['saved_prob_is_for_which_str'].map(lambda x: np.where(options == x)[0][0])
             X_scenario = X_scenario.to_numpy().reshape(-1, 1)
             Y_scenario = tmp['Saved']
             coef_scenario = model.fit(X_scenario, Y_scenario)
@@ -372,7 +341,16 @@ class ScenarioTester:
 
 
 def main():
-    st = ScenarioTester()
+    from run_toy_examples import get_args
+    args = get_args()
+    st = ScenarioTester(
+        generate_responses=not args.scoring_only, count_refusal=args.count_refusal,
+        openai_key_alias=args.api,
+        model_versions=args.model_versions, system_roles=args.system_roles,
+        differ_by_country=args.differ_by_country, differ_by_lang=args.differ_by_lang,
+        differ_by_system_roles=args.differ_by_system_roles, differ_by_model=args.differ_by_model,
+        add_paraphrases=args.add_paraphrases,
+    )
 
 
 if __name__ == '__main__':

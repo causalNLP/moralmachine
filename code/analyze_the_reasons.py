@@ -51,30 +51,77 @@ Your choice: (If there are multiple types of reasons, start from the most matche
 '''.strip()
 
 
-from glob import glob
+class ReasonAnalyzer():
+    def __init__(self):
 
-files = glob('data/vignette_gpt[34]_default_en.csv')
-print(files)
-import pdb;pdb.set_trace()
-from efficiency.log import fread
-from efficiency.nlp import Chatbot
+        from glob import glob
 
-chat = Chatbot(model_version='gpt4', max_tokens=30, output_file='data/cache/gpt4_reason_analysis.csv',
-               system_prompt="You are a helpful assistant.",
-               openai_key_alias='OPENAI_API_KEY_MoralNLP', )
+        self.files = glob('data/vignette_gpt[34]_default_[dez][ehn].csv')
 
-for file in files:
-    data = fread(file)
-    for row in data:
-        reason_type = chat.ask(prompt.format(gpt_response=row['gpt_response']))
-        row['last_column'] = reason_type
+    def check_classifier(self):
+        import pandas as pd
+        from efficiency.function import set_seed, flatten_list
+        set_seed()
+        # self.files = ['data/vignette_gpt3_default_en.csv']
+        for file in self.files[2:]:
+            df = pd.read_csv(file)
+            df = df[df['this_saving_prob'].isin([-1, 0.5, 1])]
+            df = df[df['this_saving_prob'].isin([1])]
+            df = df.sample(frac=1)
+            reasons = df['reason_type'].to_list()
+            reasons = [i.split('\n') for i in reasons]
+            reasons = flatten_list(reasons)
+            from collections import Counter
+            cnt = Counter(reasons)
+            df = pd.DataFrame.from_dict(cnt, orient='index').reset_index()
+            df.columns = ['Reason', 'count']
+            df.sort_values(by='count', ascending=False, inplace=True)
+            print(df)
+            import pdb;pdb.set_trace()
 
-    import pandas as pd
-    df = pd.DataFrame(data)
+            print()
+            print(file)
+            # import pdb;pdb.set_trace()
 
-    # df.drop('reason_type', axis=1, inplace=True)
-    old_column_index = df.columns.get_loc('gpt_response')
-    df.insert(old_column_index + 1, 'reason_type', df['last_column'])
-    df.drop('last_column', axis=1, inplace=True)
+            df.to_csv(file.replace('.csv', '_reason.csv'), index=False)
 
-    df.to_csv(file, index=False)
+    def classify_reasons(self):
+        from glob import glob
+
+        files = glob('data/vignette_gpt[34]_default_[dez][ehn].csv')
+        files = glob('data/vignette_gpt[34]_default_[dz][eh].csv')
+        print(files)
+        import pdb;
+        pdb.set_trace()
+        from efficiency.log import fread
+        from efficiency.nlp import Chatbot
+
+        chat = Chatbot(model_version='gpt4', max_tokens=100, output_file='data/cache/gpt4_reason_analysis.csv',
+                       system_prompt="You are a helpful assistant.",
+                       openai_key_alias='OPENAI_API_KEY_MoralNLP', )
+
+        for file in files:
+            data = fread(file)
+            for row in data:
+                reason_type = chat.ask(prompt.format(gpt_response=row['gpt_response']))
+                row['last_column'] = reason_type
+
+            import pandas as pd
+            df = pd.DataFrame(data)
+
+            # df.drop('reason_type', axis=1, inplace=True)
+            old_column_index = df.columns.get_loc('gpt_response')
+            df.insert(old_column_index + 1, 'reason_type', df['last_column'])
+            df.drop('last_column', axis=1, inplace=True)
+
+            df.to_csv(file, index=False)
+
+
+def main():
+    reason_analyzer = ReasonAnalyzer()
+    reason_analyzer.check_classifier()
+    reason_analyzer.classify_reasons()
+
+
+if __name__ == '__main__':
+    main()

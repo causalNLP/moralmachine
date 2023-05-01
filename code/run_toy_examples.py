@@ -422,7 +422,10 @@ class GPTResponseParser:
 class ScenarioTester:
     from efficiency.log import fread
     countries = [None] + [i['country'] for i in fread(human_file, verbose=False)]
-    langs = ['en', 'zh', 'de', 'it', 'es', 'ja', 'hu', 'fr', 'ro', 'nl', 'cs'] 
+    langs = ['en', 'zh', 'de', 'it', 'es', 'ja', 'hu', 'fr', 'ro', 'nl', 'cs']
+    from translate import MultiTranslator
+    translateable_langs = set(MultiTranslator.deepl_lang + MultiTranslator.google_lang)
+    langs = ['English'] + sorted({i['language'] for i in fread(human_file, verbose=False)} - {'English'})
     model_versions = ['gpt4', 'gpt3.5', 'gpt3', 'gpt3.042', 'gpt3.041', 'gpt3.04', 'gpt3.03', 'gpt3.02', 'gpt3.01', ]
     system_roles = ['default', 'expert', 'normal', ]
 
@@ -439,19 +442,19 @@ class ScenarioTester:
         self.openai_key_alias = openai_key_alias
         self.add_paraphrases = add_paraphrases
         self.count_refusal = count_refusal
+        self.langs = ['en'] + sorted({self._language2alpha_2(i) for i in self.langs} & self.translateable_langs)
 
         self.max_n = 5  # max number of passengers/pedestrians
         self.n_questions_per_category = 1000
         self.n_questions_per_category = 10
 
         countries = self.countries[:1] if not differ_by_country else self.countries
-        langs = self.langs[:1] if not differ_by_lang else self.langs
+        langs = self.langs[:1] if not differ_by_lang else self.langs[::-1]
         model_versions = model_versions if model_versions is not None \
             else self.model_versions[:1] if not differ_by_model else self.model_versions
         system_roles = system_roles if system_roles is not None \
             else self.system_roles[:1] if not differ_by_system_roles else self.system_roles
 
-        import pycountry
         from tqdm import tqdm
         from itertools import product
         from efficiency.log import show_var
@@ -469,14 +472,7 @@ class ScenarioTester:
             if add_paraphrases:
                 suffix += '_para'
             if country is not None:
-                try:
-                    country_code = pycountry.countries.get(common_name=country).alpha_2.lower()
-                except:
-                    try:
-                        country_code = pycountry.countries.get(name=country).alpha_2.lower()
-                    except:
-                        import pdb;
-                        pdb.set_trace()
+                country_code = self._country2alpha_2(country)
                 suffix += f'_{country_code}'
 
             prompt_composer = PromptComposer(lang=lang, country=country)
@@ -499,6 +495,31 @@ class ScenarioTester:
         import sys
         sys.exit()
         self.get_fig2a(df)
+
+    def _country2alpha_2(self, country):
+        import pycountry
+        try:
+            country_code = pycountry.countries.get(common_name=country).alpha_2.lower()
+        except:
+            try:
+                country_code = pycountry.countries.get(name=country).alpha_2.lower()
+            except:
+                import pdb;
+                pdb.set_trace()
+        return country_code
+
+    def _language2alpha_2(self, language):
+        import pycountry
+        try:
+            alpha_2 = pycountry.languages.get(name=language).alpha_2.lower()
+            # [l.name for l in pycountry.languages]
+        except:
+            try:
+                alpha_2 = pycountry.languages.get(name=language).alpha_3.lower()
+            except:
+                import pdb;
+                pdb.set_trace()
+        return alpha_2
 
     def run_each_setting(self, model_version, system_role, lang, country, suffix, add_paraphrases, generate_responses):
         self.file_path = vign_output_file_tmpl.format(
@@ -891,7 +912,7 @@ python code/run_toy_examples.py -add_paraphrases -model_versions gpt3
 python code/run_toy_examples.py -api OPENAI_API_KEY_MoralNLP -model_versions gpt3.5 -differ_by_system_roles
 python code/run_toy_examples.py -api OPENAI_API_KEY_MoralNLP -system_roles expert
 python code/run_toy_examples.py -scoring_only -differ_by_model
-python code/run_toy_examples.py -differ_by_model
+python code/run_toy_examples.py -differ_by_lang -model_versions gpt3
 python code/run_toy_examples.py -api OPENAI_API_KEY_MoralNLP -model_versions gpt3 -differ_by_country -system_roles default 
     '''
     return args

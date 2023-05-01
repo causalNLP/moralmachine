@@ -1,14 +1,19 @@
-﻿country
-United Kingdom
-Australia
-New Zealand
-Ireland
-United States
-Canada
-South Africa
-Taiwan
-South Korea
-China
-Macao
-Japan
-Cambodia
+﻿country,language
+United Kingdom,English
+Australia,English
+New Zealand,English
+Ireland,English
+United States,English
+Canada,English
+South Africa,English
+Taiwan,Chinese
+South Korea,Korean
+China,Chinese
+Macao,Yue Chinese
+Japan,Japanese
+Cambodia,Central Khmer
+Thailand,Thai
+France,French
+Czechia,Czech
+Hungary,Hungarian
+Slovakia,Slovak
