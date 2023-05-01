@@ -26,10 +26,10 @@ class MultiTranslator:
             from google.cloud import translate_v2 as translate
             import deepl
         load_dotenv()
-        DEEPL_API_KEY = os.getenv("DEEPL_API_KEY")
+        # DEEPL_API_KEY = os.getenv("DEEPL_API_KEY")
         #check if environment variable is set
-        if DEEPL_API_KEY is None:
-            raise ValueError("Environment variable DEEPL_API_KEY not set")
+        # if DEEPL_API_KEY is None:
+            # raise ValueError("Environment variable DEEPL_API_KEY not set")
         if os.getenv("GOOGLE_APPLICATION_CREDENTIALS") is None:
             raise ValueError("Environment variable GOOGLE_APPLICATION_CREDENTIALS not set")
             
