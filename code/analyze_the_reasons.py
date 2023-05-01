@@ -53,32 +53,28 @@ Your choice: (If there are multiple types of reasons, start from the most matche
 
 from glob import glob
 
-files = glob('data/vignette_gpt4_default*_en.csv')
+files = glob('data/vignette_gpt[34]_default_en.csv')
 print(files)
 import pdb;pdb.set_trace()
-from efficiency.log import fread, write_dict_to_csv
+from efficiency.log import fread
 from efficiency.nlp import Chatbot
 
 chat = Chatbot(model_version='gpt4', max_tokens=30, output_file='data/cache/gpt4_reason_analysis.csv',
                system_prompt="You are a helpful assistant.",
-               openai_key_alias='OPENAI_API_KEY', )
+               openai_key_alias='OPENAI_API_KEY_MoralNLP', )
+
 for file in files:
     data = fread(file)
     for row in data:
         reason_type = chat.ask(prompt.format(gpt_response=row['gpt_response']))
-        row['gpt_response_reason_type'] = reason_type
-    import pdb;
+        row['last_column'] = reason_type
 
-    pdb.set_trace()
     import pandas as pd
-
     df = pd.DataFrame(data)
-    df.drop('reason_type', axis=1, inplace=True)
 
+    # df.drop('reason_type', axis=1, inplace=True)
     old_column_index = df.columns.get_loc('gpt_response')
-
-    # Insert the new column right next to the old column
-    df.insert(old_column_index + 1, 'reason_type', df['gpt_response_reason_type'])
-    df.drop('gpt_response_reason_type', axis=1, inplace=True)
+    df.insert(old_column_index + 1, 'reason_type', df['last_column'])
+    df.drop('last_column', axis=1, inplace=True)
 
     df.to_csv(file, index=False)
