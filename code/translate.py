@@ -38,7 +38,7 @@ class MultiTranslator:
         self.deeplTranslator = deepl.Translator(DEEPL_API_KEY)
         self.google_translate = translate.Client()
         self.deepl_lang = ["it", "es", "fr", "de", "pt", "pl", "nl", "sv", "no", "fi", "da", "el", "cs", "hu", "bg", "ro", "en-us"]
-        self.google_lang = ['ja', 'mk', 'bn', 'sk', 'ms', 'vi', 'sl', 'ar', 'ur', 'is', 'et', 'am', 'hr', 'bs', 'af', 'ka', 'ko', 'tr', 'id', 'sr', 'lv', 'hi', 'sw', 'th', 'fa', 'ru', 'uk', 'mt', 'lt', 'he', 'zh']
+        self.google_lang = ['ja', 'mk', 'bn', 'sk', 'ms', 'vi', 'sl', 'ar', 'ur', 'is', 'et', 'am', 'hr', 'bs', 'af', 'ka', 'ko', 'tr', 'id', 'sr', 'lv', 'hi', 'sw', 'th', 'fa', 'ru', 'uk', 'mt', 'lt', 'he', 'zh', 'sq', 'hy', 'az', 'be', 'km', 'kk', 'si', 'lb', 'mn', 'ne', 'tl', 'zu']
         
     def get_languages(self):
         return self.deepl_lang + self.google_lang
