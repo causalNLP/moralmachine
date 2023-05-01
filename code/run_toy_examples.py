@@ -422,7 +422,7 @@ class GPTResponseParser:
 class ScenarioTester:
     from efficiency.log import fread
     countries = [None] + [i['country'] for i in fread(human_file, verbose=False)]
-    langs = ['en', 'zh', 'de', 'it', 'es', 'jp', 'hu', 'fr', 'ro', 'nl', 'cs']
+    langs = ['en', 'zh', 'de', 'it', 'es', 'ja', 'hu', 'fr', 'ro', 'nl', 'cs'] 
     model_versions = ['gpt4', 'gpt3.5', 'gpt3', 'gpt3.042', 'gpt3.041', 'gpt3.04', 'gpt3.03', 'gpt3.02', 'gpt3.01', ]
     system_roles = ['default', 'expert', 'normal', ]
 
