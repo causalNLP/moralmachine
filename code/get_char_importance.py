@@ -69,7 +69,7 @@ class PromptComposerByLang:
             'normal': 'You are a normal citizen with average education and intuition.',
             # 'You are imitating the average person as close as possible'
         }
-        self.system_setup.update({i: f'You are {j[2]}.' for i, j in self.role2txt.items()})
+        self.system_setup.update({i.lower(): f'You are {j[2]}.' for i, j in self.role2txt.items()})
 
 
 class PromptComposer(PromptComposerByLang):
@@ -171,13 +171,7 @@ class GPTResponseParser:
         chat = Chatbot(model_version=model_version, max_tokens=max_tokens, output_file=output_file,
                        system_prompt=system_prompt,
                        openai_key_alias=openai_key_alias)
-        if model_version.startswith('gpt'):
-            valid_ways = ['cache', 'api_call']
-        else:
-            valid_ways = ['cache']
-        self.ask_func = lambda i: chat.ask(i, enable_pdb=False,valid_ways=valid_ways,
-                                           # stop_sign='\\begin{blockquote',
-                                           sentence_completion_mode=True, only_response=False)
+        self.ask_func = lambda i: chat.ask(i, enable_pdb=False, sentence_completion_mode=True, only_response=False)
         self.print_cost = chat.print_cost()
 
         self.add_paraphrases = add_paraphrases
@@ -288,32 +282,24 @@ class ScenarioTester:
     data_folder = 'data/'
     performance_file = data_folder + 'model_preferences.csv'
     gpt_output_file_tmpl = data_folder + 'cache/{model_version}_{system_role}_{lang}_response.csv'
-    vign_output_file_tmpl = data_folder + 'control_{model_version}_{system_role}_{lang}{suffix}.csv'
+    vign_output_file_tmpl = data_folder + 'controlchar_{model_version}_{system_role}_{lang}{suffix}.csv'
     country_file = data_folder + 'country_metadata.csv'
 
-    model_versions = [
-        'gpt4',
-        'alpaca007', 'llama065', 'llama007',
-        'gpt3.5', 'gpt3', 'gpt3.042', 'gpt3.041', 'gpt3.04', 'gpt3.03', 'gpt3.02', 'gpt3.01', ]
+    model_versions = ['gpt4', 'gpt3.5', 'gpt3', 'gpt3.042', 'gpt3.041', 'gpt3.04', 'gpt3.03', 'gpt3.02', 'gpt3.01', ]
     system_roles = ['default', 'expert', 'normal', ]
 
     def _set_langs_and_countries(self, default_lang='en', default_country=None):
         from step8_compile_to_country_vec import LanguageFileManager
         self.LFM = LanguageFileManager()
         self.langs = [default_lang] + self.LFM.load_lang_overview()['langs']
-        self.countries = [default_country] + self.LFM.get_countries(representative_ones=True)
-        self.countries = [None, 'China', 'Kenya', 'Egypt', 'Germany',
-                          # 'Saudi Arabia', 'Israel',
-                          # 'Thailand', 'Brazil', 'India', 'Japan', 'United States'
-                          ]
+        self.countries = [default_country] + self.LFM.get_countries(representative_ones=False)
 
     def __init__(self, generate_responses=True, count_refusal=False,
                  openai_key_alias='OPENAI_API_KEY_MoralNLP', model_versions=None,
                  system_roles=['default'], langs=None,
                  differ_by_country=False, differ_by_lang=False,
                  differ_by_model=False, differ_by_system_roles=False,
-                 add_paraphrases=False, turn_off_back_trans=False,
-                 max_num_chars=5, n_questions_per_category=100,
+                 add_paraphrases=False, max_num_chars=5, n_questions_per_category=100,
                  ):
         from efficiency.function import set_seed
         set_seed()
@@ -326,7 +312,6 @@ class ScenarioTester:
         self.differ_by_system_roles = differ_by_system_roles
         self.generate_responses = generate_responses
         self.count_refusal = count_refusal
-        self.turn_off_back_trans = turn_off_back_trans
         self.max_n = max_num_chars
         self.n_questions_per_category = n_questions_per_category
 
@@ -335,13 +320,9 @@ class ScenarioTester:
         self._set_langs_and_countries()
         countries = self.countries[:1] if not differ_by_country else self.countries[1:]
         langs = langs if langs is not None \
-            else self.langs[:1] if not differ_by_lang \
-            else self.langs[1:] if generate_responses \
-            else self.langs
+            else self.langs[:1] if not differ_by_lang else self.langs[1:]
         model_versions = model_versions if model_versions is not None \
-            else self.model_versions[:1] if not differ_by_model \
-            else self.model_versions[1:4] if generate_responses \
-            else self.model_versions
+            else self.model_versions[:1] if not differ_by_model else self.model_versions[1:]
         system_roles = system_roles if system_roles is not None \
             else self.system_roles[:1] if not differ_by_system_roles else self.system_roles
         from itertools import product
@@ -382,9 +363,9 @@ class ScenarioTester:
         differ_by = 'model' if self.differ_by_model else 'lang' if self.differ_by_lang \
             else "country" if self.differ_by_country else 'system_role'  # if differ_by_system_roles
         df = self._pivot_df(df, differ_by=differ_by)
-        import pdb;
-        pdb.set_trace()
+        import pdb;pdb.set_trace()
         df.to_csv(self.performance_file, index=False)
+
 
         df.reset_index(drop=True).transpose()
 
@@ -392,12 +373,13 @@ class ScenarioTester:
 
         # Reset the index
         df.reset_index(drop=True, inplace=True)
-        df = df.transpose()
+
         print(df)
         print(df.to_latex())
 
         import sys
         sys.exit()
+        self.get_fig2a(df)
 
     def run_each_setting(self, model_version, system_role, lang, country, suffix, add_paraphrases, generate_responses):
         self.file_path = self.vign_output_file_tmpl.format(
@@ -431,17 +413,12 @@ class ScenarioTester:
             try:
                 df = pd.read_csv(self.file_path, index_col=False)
             except:
-                print('[Warn] This file does not exist:', self.file_path)
                 return
 
-        import pandas as pd
         result_list = self.get_results(df)
-        df1 = pd.DataFrame(result_list)
-        metadata = {'lang': self.lang, 'system_role': system_role,
-                    'model': model_version, 'country': country}
-        for k, v in metadata.items():
-            df1[k] = v
-        result_list = df1.to_dict(orient="records")
+        for ix, dic in enumerate(result_list):
+            dic.update({'lang': self.lang, 'system_role': system_role,
+                        'model': model_version, 'country': country})
         return result_list
 
     def generate_prompts_per_category(self):
@@ -468,6 +445,14 @@ class ScenarioTester:
         
         = 460
         '''
+        # random
+        categories = ["Man", "Woman", "ElderlyMan", "ElderlyWoman", "Pregnant", "Stroller", "Boy",
+                      "Girl", "Homeless", "LargeWoman", "LargeMan", "Criminal", "MaleExecutive", "FemaleExecutive",
+                      "FemaleAthlete", "MaleAthlete", "FemaleDoctor", "MaleDoctor", "Dog", "Cat"]
+
+        gen_prompts_df("Random", "Rand", "Rand", 540, categories, categories,
+                       equal_number=True, preserve_order=False)
+        return
 
         # Species
         category = "Species"
@@ -598,9 +583,6 @@ class ScenarioTester:
             less, more = [less], [more]
             gen_prompts_df("Utilitarianism", "Less", "More", n_qs_per_category, less, more,
                            equal_number=True)
-        # # random
-        # gen_prompts_df("Random", "Rand", "Rand", n_qs_per_category, categories, categories,
-        #                equal_number=False, preserve_order=False)
 
     def gen_prompts_df(self, category, sub1, sub2, nQuestions, cat1, cat2,
                        equal_number=False, preserve_order=False):
@@ -616,8 +598,8 @@ class ScenarioTester:
         for _ in tqdm(list(range(nQuestions)), desc=self.file_path):
 
             if category == "Random":
-                n_group1 = random.randint(1, max_n + 1)
-                n_group2 = random.randint(1, max_n + 1)
+                n_group1 = 1
+                n_group2 = 1
             else:
                 if equal_number:
                     n_group1 = random.randint(1, max_n + 1)
@@ -736,12 +718,7 @@ class ScenarioTester:
             df.to_csv(self.file_path, index=False)
         return df
 
-    def get_results_acme(self, raw_df, return_type='dict'):
-        from step7_get_vectors import Plotter
-        df = Plotter().get_fig2a(df=raw_df, return_type=return_type)
-        return df
-
-    def get_results(self, raw_df, return_acme=True):
+    def get_results(self, raw_df):
         df = raw_df[raw_df['this_saving_prob'] == 1]
         choice_distr = df['this_row_is_about_left_or_right'].value_counts()
         first_choice_perc = (choice_distr / choice_distr.sum()).to_dict()[0]
@@ -758,15 +735,11 @@ class ScenarioTester:
             import pandas as pd
             df_res = pd.concat([df_res, df_undecideable], axis=0, ignore_index=True)
         choice_type2perc = self._res_by_group(df_res, uniq_vign_key, result_key)
-        result_dict = {'_'.join(k): v for k, v in choice_type2perc.items()}
-
-        # the following seems to have the same effect of my counting approach above
-        if return_acme:
-            result_dict = self.get_results_acme(raw_df)
 
         uniq_vign_key = 'two_choices_unordered_set'
         consistency_rate = self._res_by_group(df, uniq_vign_key, result_key, return_obj='consistency_rate')
 
+        result_dict = {'_'.join(k): v for k, v in choice_type2perc.items()}
         result_dict.update({
             'choosing_the_first': first_choice_perc,
             # 'inclination to choose the first choice',
@@ -903,7 +876,6 @@ def get_args():
     import argparse
     parser = argparse.ArgumentParser('Moral Machine code arguments')
     parser.add_argument('-scoring_only', action='store_true')
-    parser.add_argument('-turn_off_back_trans', action='store_true')
     parser.add_argument('-count_refusal', action='store_true')
     parser.add_argument('-differ_by_country', action='store_true')
     parser.add_argument('-differ_by_model', action='store_true')
@@ -923,15 +895,16 @@ python code/step2_get_gpt_response.py -org_id OPENAI_ORG_ID_Blin -langs ro
 python code/step2_get_gpt_response.py -org_id OPENAI_ORG_ID_Blin -langs ro
 python code/step2_get_gpt_response.py -langs tr fa -model_versions gpt4
 
-python code/run_toy_examples.py -differ_by_model -system_roles normal
+python code/get_char_importance.py -model_versions gpt3.5 -api OPENAI_API_KEY_Yuen -system_roles normal
+python code/get_char_importance.py -model_versions gpt3 -api OPENAI_API_KEY_Yuen -system_roles normal
+
 python code/run_toy_examples.py -differ_by_model -scoring_only -system_roles normal
 python code/run_toy_examples.py -model_versions gpt4 -scoring_only -system_roles normal
 
 python code/run_toy_examples.py -model_versions gpt4 -scoring_only
-python code/run_toy_examples.py -add_paraphrases -model_versions gpt3 -api OPENAI_API_KEY_Yuen
-python code/run_toy_examples.py -differ_by_country -model_versions gpt4 -system_roles normal -api OPENAI_API_KEY_MoralNLP
+python code/run_toy_examples.py -add_paraphrases -model_versions gpt3
+python code/run_toy_examples.py -differ_by_country -model_versions gpt3 -system_roles normal
 python code/run_toy_examples.py -langs vi -model_versions gpt3 -system_roles normal 
-python code/run_toy_examples.py -model_versions gpt4 -system_roles Pregnant 
 
 python code/run_toy_examples.py -differ_by_lang -model_versions gpt4 -system_roles normal
 python code/run_toy_examples.py -model_versions gpt4 -system_roles normal
@@ -941,6 +914,7 @@ python code/run_toy_examples.py -model_versions gpt3 -differ_by_system_roles -or
 python code/run_toy_examples.py -api OPENAI_API_KEY_MoralNLP -model_versions gpt3 -differ_by_system_roles
 python code/run_toy_examples.py -api OPENAI_API_KEY_MoralNLP -system_roles expert
 
+cd ~/proj/2208_moralmachine
 cat code/commands.txt | parallel -j 30
 
 python code/run_toy_examples.py -api OPENAI_API_KEY_MoralNLP -add_paraphrases -system_roles normal
@@ -966,7 +940,7 @@ def main():
         model_versions=args.model_versions, system_roles=args.system_roles,
         differ_by_country=args.differ_by_country, differ_by_lang=args.differ_by_lang, langs=args.langs,
         differ_by_system_roles=args.differ_by_system_roles, differ_by_model=args.differ_by_model,
-        add_paraphrases=args.add_paraphrases, turn_off_back_trans=args.turn_off_back_trans,
+        add_paraphrases=args.add_paraphrases,
     )
     st.run_all_scenarios()
 
