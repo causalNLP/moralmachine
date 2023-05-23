@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <!-- Required meta tags -->
+    <!-- The code was taken from the moral machine project https://osf.io/3hvt2/?view_only=4bb49492edee4a8eb1758552a362a2cf -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css" integrity="sha384-/Y6pD6FV/Vv2HJnA6t+vslU6fwYXjCFtcEpHbNJ0lyAFsXTsjBbfaDjzALeQsN6M" crossorigin="anonymous">
+
+    <link href="https://fonts.googleapis.com/css?family=Roboto+Condensed" rel="stylesheet">
+
+    <!-- <link rel="stylesheet" href="dendrogram.css" /> -->
+
+    <style>
+    body {
+      font-family: 'Roboto Condensed', sans-serif;
+    }
+    .node circle  {
+      fill: #999;
+    }
+
+    .node circle.cluster-one {
+      fill: #CC6677;
+    }
+
+    .node circle.cluster-two {
+      fill: #4477AA;
+    }
+
+    .node circle.cluster-three {
+      fill: #DDCC77;
+    }
+
+    .node circle.cluster-four {
+      fill: #2CA25F;
+    }
+
+    .node text {
+      font-size: 18px;
+      line-height: 1.4;
+    }
+
+    .culture--Indo-European {
+      fill: #17aa5a;
+    }
+    .culture--Uralic {
+      fill: #94f321;
+    }
+    .culture--Turkic {
+      fill:   #2196f3;
+    }
+
+    .culture--Afroasiatic {
+      fill: #212bf3;
+    }
+
+    .culture--Sino-Tibetan {
+      fill: #7f21f3;
+    }
+
+    .culture--Japonic {
+      fill: #8b1492;
+    }
+
+    .culture--Koreanic {
+      fill:   #f32194;
+    }
+
+    .culture--Malayo-Polynesian {
+      fill: #f3212b;
+    }
+
+    .culture--Niger-Congo {
+      fill: #f37f21;
+    }
+
+    .culture--Semitic {
+      fill: #f3e821;
+    }
+    .culture--Austronesian {
+      fill: #FBC02A;
+    }
+    .culture--Austroasiatic {
+      fill: #FB6E2A;
+    }
+
+    .culture--Baltic {
+      fill: #000000;
+    }
+
+    .culture--Creole {
+      fill: #000000;
+    }
+
+    .culture--Constructed {
+      fill: #000000;
+    }
+
+    .culture--Celtic {
+      fill: #000000;
+    }
+
+    .culture--Dravidian {
+      fill: #000000;
+    }
+
+    .culture--Iranian {
+      fill: #000000;
+    }
+    .node--internal text {
+      text-shadow: 0 1px 0 #fff, 0 -1px 0 #fff, 1px 0 0 #fff, -1px 0 0 #fff;
+    }
+
+    .link {
+      fill: none;
+      stroke: #555;
+      stroke-opacity: 0.4;
+      stroke-width: 2.5px;
+    }
+
+    .link.cluster-one {
+      stroke: #CC6677;
+    }
+
+    .link.cluster-two {
+      stroke: #4477AA;
+    }
+
+    .link.cluster-three {
+      stroke: #DDCC77;
+    }
+
+    .link.cluster-four {
+      stroke: #2CA25F;
+    }
+
+
+    </style>
+  </head>
+  <body>
+
+    <svg id="img" width="1200" height="1200"></svg>
+
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js" integrity="sha384-b/U6ypiBEHpOf/4+1nzFpr53nxSS+GLCkfwBdFNTxtclqqenISfwAzpKaMNFNmj4" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/js/bootstrap.min.js" integrity="sha384-h0AbiXch4ZDo7tp9hKZ4TsHbi047NrKGLO3SEJAg45jXxnGIfYzk4Si90RDIqNm1" crossorigin="anonymous"></script>
+    <script src="https://d3js.org/d3.v4.min.js"></script>
+    <script>
+      var width = 1000,
+          height = 1000;
+
+      var svg = d3.select("svg"),
+          g = svg.append("g").attr("transform", "translate(" + ((width / 2)-20) +
+                              "," + (height / 2 + 10) + ")"),
+          legend = svg.append("g");
+
+
+      var stratify = d3.stratify()
+                       .parentId(function(d)
+                          { return d.id.substring(0, d.id.lastIndexOf(".")); });
+
+      var cluster = d3.cluster()
+                      .size([360, width / 2 - 120]);
+
+      function project(x, y) {
+        y=y-20
+        var angle = (x - 90) / 180 * Math.PI, radius = y;
+        return [radius * Math.cos(angle), radius * Math.sin(angle)];
+      }
+
+
+      d3.csv("data/dendrogram_human_family.csv", function(error, data) {
+        if (error) throw error;
+
+        var root = stratify(data).sort(function(a, b) {
+                        return a.height - b.height || a.id.localeCompare(b.id);
+                      });
+
+        cluster(root);
+
+        var link = g.selectAll(".link")
+                    .data(root.descendants().slice(1))
+                    .enter().append("path")
+                    .attr("d", function(d) {
+                      y_pos=d.y-10
+                      return "M" + project(d.x, y_pos)
+                          + "C" + project(d.x, ((y_pos + d.parent.y-10) / 2))
+                          + " " + project(d.parent.x, ((y_pos + d.parent.y) / 2))
+                          + " " + project(d.parent.x, d.parent.y-10);
+                    });
+
+      link.attr("class", function(d) {
+              var id = d.data.id;
+
+              if (id.slice(2,7) == "1.2.5") {
+                  return "link cluster-one";
+              } else if (id.slice(2,5) == "3.4") {
+                  return "link cluster-two";
+              } else if (id.slice(2,6)== "3.14") {
+                  return "link cluster-three";
+              } else if ((id.slice(2,3)== "1") && (id.slice(2,7) != "1.2.5") )  {
+                  return "link cluster-four";
+              } else {
+                return "link";
+              }
+            });
+
+        var node = g.selectAll(".node")
+                    .data(root.descendants())
+                    .enter().append("g")
+                    .attr("class", function(d) {
+                      return "node" + (d.children ? " node--internal" : " node--leaf");
+                    })
+                    .attr("transform", function(d) {
+                      return "translate(" + project(d.x, d.y) + ")";
+                    });
+
+        var leaf = g.selectAll(".node--leaf")
+                    .append("circle")
+                    .attr("r", 6)
+                    .classed("cluster-one", function(d){
+                      var id = d.data.id;
+                      return (id.slice(2,7) == "1.2.5");
+                    })
+                    .classed("cluster-two", function(d){
+                      var id = d.data.id;
+                      return (id.slice(2,5) == "3.4") ;
+                    })
+                    .classed("cluster-three", function(d){
+                      var id = d.data.id;
+                      return (id.slice(2,6)== "3.14");
+                    })
+                    .classed("cluster-four", function(d){
+                      var id = d.data.id;
+                      return ((id.slice(2,3)== "1") && (id.slice(2,7) != "1.2.5") );
+                    });
+
+        node.append("text")
+            .attr("dy", "0.31em")
+            .style("font-size", "26px")
+            .attr("x", function(d) {
+              return d.x < 180 === !d.children ? 6 : -6;
+            })
+            .style("text-anchor", function(d) {
+              return d.x < 180 === !d.children ? "start" : "end";
+            })
+            .attr("transform", function(d) {
+              return "rotate(" + (d.x < 180 ? d.x - 90 : d.x + 90) + ")";
+            })
+            .text(function(d) {
+              if (typeof d.children == "undefined") {
+                  return d.id.substring(d.id.lastIndexOf(".") + 1);
+              }
+            })
+            .attr("class", function(d){
+              var culture = d.data.family;
+
+
+              if (culture === "Indo-European") {
+                return "culture--Indo-European";
+              } else if (culture === "Uralic") {
+                return "culture--Uralic";
+              } else if (culture === "Turkic") {
+                return "culture--Turkic";
+              } else if (culture === "Afroasiatic") {
+                return "culture--Afroasiatic";
+              } else if (culture === "Sino-Tibetan") {
+                return "culture--Sino-Tibetan";
+              } else if (culture === "Japonic") {
+                return "culture--Japonic";
+              } else if (culture === "Koreanic") {
+                return "culture--Koreanic";
+              } else if (culture === "Malayo-Polynesian") {
+                return "culture--Malayo-Polynesian";
+              } else if (culture === "Niger-Congo ") {
+                return "culture--Niger-Congo ";
+
+              } else if (culture === "Austronesian") {
+                return "culture--Austronesian";
+              } else if (culture === "Austroasiatic") {
+                return "culture--Austroasiatic";
+              } else if (culture === "Germanic") {
+                return "culture--Germanic";
+              } else if (culture === "Romance") {
+                return "culture--Romance";
+              } else if (culture === "Semitic") {
+                return "culture--Semitic";
+              } else if (culture === "Baltic") {
+                return "culture--Baltic";
+              } else if (culture === "Creole") {
+                return "culture--Creole";
+              } else if (culture === "Constructed") {
+                return "culture--Constructed";
+              } else if (culture === "Celtic") {
+                return "culture--Celtic";
+              } else if (culture === "Dravidian") {
+                return "culture--Dravidian";
+              } else if (culture === "Iranian") {
+                return "culture--Iranian";
+              } else {
+                return "culture--na";
+              }
+            });
+      });
+    </script>
+  </body>
+</html>
