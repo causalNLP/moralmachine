@@ -194,14 +194,12 @@
       link.attr("class", function(d) {
               var id = d.data.id;
 
-              if (id.slice(2,7) == "1.2.5") {
+              if (id.slice(2,5) == "2.3") {
                   return "link cluster-one";
-              } else if (id.slice(2,5) == "3.4") {
+              } else if (id.slice(2,5) == "2.6") {
                   return "link cluster-two";
-              } else if (id.slice(2,6)== "3.14") {
+              } else if (id.slice(2,3)== "1") {
                   return "link cluster-three";
-              } else if ((id.slice(2,3)== "1") && (id.slice(2,7) != "1.2.5") )  {
-                  return "link cluster-four";
               } else {
                 return "link";
               }
@@ -222,20 +220,17 @@
                     .attr("r", 6)
                     .classed("cluster-one", function(d){
                       var id = d.data.id;
-                      return (id.slice(2,7) == "1.2.5");
+                      return (id.slice(2,5) == "2.3");
                     })
                     .classed("cluster-two", function(d){
                       var id = d.data.id;
-                      return (id.slice(2,5) == "3.4") ;
+                      return (id.slice(2,5) == "2.6") ;
                     })
                     .classed("cluster-three", function(d){
                       var id = d.data.id;
-                      return (id.slice(2,6)== "3.14");
+                      return (id.slice(2,3)== "1");
                     })
-                    .classed("cluster-four", function(d){
-                      var id = d.data.id;
-                      return ((id.slice(2,3)== "1") && (id.slice(2,7) != "1.2.5") );
-                    });
+
 
         node.append("text")
             .attr("dy", "0.31em")
