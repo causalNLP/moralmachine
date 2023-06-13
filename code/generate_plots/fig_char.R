@@ -37,7 +37,7 @@ ggirl <-  rasterGrob(girl, interpolate=FALSE)
 ggplot(plotdata,aes(reorder(CharacterType, Estimates), Estimates,color=Estimates>0,fill=Estimates>0))+
   geom_col(width = 0.8, alpha=1)+
   theme_bw() + coord_flip()+
-  scale_y_continuous(limits = c(-0.65,0.5),breaks=yticks,labels=sapply(yticks,function(z) return(ifelse(z<0,paste0("-  ",as.character(-z)),ifelse(z>0,paste0("+",as.character(z)),"no change")))))+
+  scale_y_continuous(limits = c(-0.65,0.5),breaks=yticks,labels=sapply(yticks,function(z) return(ifelse(z<0,paste0("-  ",as.character(-z)),ifelse(z>0,paste0("+",as.character(z)),"Person")))))+
   scale_color_manual(values = c("#B74F6F", "#0077AD"))+
   scale_fill_manual(values = c("#B74F6F", "#0077AD"))+
   xlab("Characters")+
