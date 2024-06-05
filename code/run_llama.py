@@ -1,3 +1,8 @@
+"""
+This script computes LLM completion for a given prompt using Meta-LLAMA-3-8B model. It has support for instruct models.
+For instruct model we rely in the chat template and ask the model to respond in JSON format.
+The input file is a csv file with a column named 'Prompt' containing the prompts.
+"""
 import torch
 from transformers import  AutoModelForCausalLM, AutoTokenizer
 import csv
